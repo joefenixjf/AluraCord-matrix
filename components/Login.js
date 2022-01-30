@@ -1,7 +1,7 @@
 import appConfig from "../config.json";
 import { Box, Button, Text, TextField, Image } from "@skynexui/components";
 import Titulo from "./Titulo";
-import React, { isValidElement, useState } from "react";
+import React, { useState } from "react";
 import { useRouter } from "next/router";
 
 function LoginBox() {
