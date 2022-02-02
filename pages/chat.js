@@ -1,10 +1,11 @@
 import React from "react";
 import appConfig from "../config.json";
-import { Box, Text, TextField, Image, Button } from "@skynexui/components";
+import { Box, TextField, Image, Button } from "@skynexui/components";
 import Header from "../components/Header";
 import MessageList from "../components/MessageList";
 
 export default function ChatPage() {
+  const usuario = localStorage.getItem("username");
   // Sua lógica vai aqui
   const [mensagem, setMensagem] = React.useState("");
   const [listaMensagem, setListaMensagem] = React.useState([]);
@@ -20,7 +21,7 @@ export default function ChatPage() {
   const handleNovaMensagem = (novaMensagem) => {
     const mensagem = {
       id: listaMensagem.length + 1,
-      de: "vanessametonini",
+      de: usuario,
       texto: novaMensagem,
     };
     setListaMensagem([mensagem, ...listaMensagem]);

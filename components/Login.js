@@ -42,6 +42,7 @@ function LoginBox() {
         onSubmit={(e) => {
           e.preventDefault();
           roteamento.push("/chat");
+          localStorage.setItem("username", username);
         }}
         styleSheet={{
           display: "flex",

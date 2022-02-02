@@ -46,7 +46,7 @@ export default function MessageList({ mensagens, deletaMsg }) {
                     display: "inline-block",
                     marginRight: "8px",
                   }}
-                  src={`https://github.com/vanessametonini.png`}
+                  src={`https://github.com/${mensagem.de}.png`}
                 />
                 <Text tag="strong">{mensagem.de}</Text>
                 <Text
