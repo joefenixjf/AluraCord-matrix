@@ -3,9 +3,11 @@ import appConfig from "../config.json";
 import { Box, TextField, Image, Button } from "@skynexui/components";
 import Header from "../components/Header";
 import MessageList from "../components/MessageList";
+import { useRouter } from "next/router";
 
 export default function ChatPage() {
-  const usuario = localStorage.getItem("username");
+  const rot = useRouter();
+  const usuario = rot.query.user;
   // Sua lógica vai aqui
   const [mensagem, setMensagem] = React.useState("");
   const [listaMensagem, setListaMensagem] = React.useState([]);

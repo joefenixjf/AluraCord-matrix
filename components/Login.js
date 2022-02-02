@@ -41,8 +41,10 @@ function LoginBox() {
         as="form"
         onSubmit={(e) => {
           e.preventDefault();
-          roteamento.push("/chat");
-          localStorage.setItem("username", username);
+          roteamento.push({
+            pathname: "/chat",
+            query: { user: username },
+          });
         }}
         styleSheet={{
           display: "flex",
