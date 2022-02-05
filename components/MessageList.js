@@ -57,7 +57,7 @@ export default function MessageList({ mensagens, deletaMsg }) {
                   }}
                   tag="span"
                 >
-                  {new Date().toLocaleDateString()}
+                  {new Date(mensagem.created_at).toLocaleDateString()}
                 </Text>
               </div>
               <Button
