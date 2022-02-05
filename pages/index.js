@@ -1,8 +1,12 @@
 import { Box } from "@skynexui/components";
 import appConfig from "../config.json";
 import LoginBox from "../components/Login";
+import React from "react";
 
-function PaginaInicial() {
+function PaginaInicial(props) {
+  const usuarioLogado = (user) => {
+    props.obtemUsuario(user);
+  };
   return (
     <>
       <Box
@@ -18,7 +22,7 @@ function PaginaInicial() {
           backgroundBlendMode: "multiply",
         }}
       >
-        <LoginBox />
+        <LoginBox obtemUsuario={usuarioLogado} />
       </Box>
     </>
   );

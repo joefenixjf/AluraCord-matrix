@@ -4,7 +4,7 @@ import Titulo from "./Titulo";
 import React, { useState } from "react";
 import { useRouter } from "next/router";
 
-function LoginBox() {
+function LoginBox(props) {
   const [username, setUsername] = useState("");
   const [activeUsername, setActiveUsername] = useState("");
   const roteamento = useRouter();
@@ -41,9 +41,9 @@ function LoginBox() {
         as="form"
         onSubmit={(e) => {
           e.preventDefault();
+          props.obtemUsuario(activeUsername);
           roteamento.push({
             pathname: "/chat",
-            query: { user: username },
           });
         }}
         styleSheet={{

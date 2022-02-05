@@ -3,7 +3,6 @@ import appConfig from "../config.json";
 import { Box, TextField, Button } from "@skynexui/components";
 import Header from "../components/Header";
 import MessageList from "../components/MessageList";
-import { useRouter } from "next/router";
 import { createClient } from "@supabase/supabase-js";
 
 const SUPABASE_ANON_KEY =
@@ -20,9 +19,8 @@ const supabaseClient = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 //     console.log(dados.data);
 //   });
 
-export default function ChatPage() {
-  const rot = useRouter();
-  const usuario = rot.query.user;
+export default function ChatPage({ usuario }) {
+  console.log(usuario);
   // Sua lógica vai aqui
   const [mensagem, setMensagem] = React.useState("");
   const [listaMensagem, setListaMensagem] = React.useState([]);
@@ -40,20 +38,28 @@ export default function ChatPage() {
       .from("mensagens")
       .select("*")
       .then(({ data }) => {
-        console.log("Dados: ", data);
-        setListaMensagem(data);
+        // console.log("Dados: ", data);
+        setListaMensagem(data.reverse());
       });
   }, []);
 
   const handleNovaMensagem = (novaMensagem) => {
     if (novaMensagem !== "") {
       const mensagem = {
-        id: listaMensagem.length + 1,
+        // id: listaMensagem.length + 1,
         de: usuario,
         texto: novaMensagem,
         created_at: new Date(),
       };
-      setListaMensagem([mensagem, ...listaMensagem]);
+
+      supabaseClient
+        .from("mensagens")
+        .insert([mensagem])
+        .then((qualÉAResposta) => {
+          // console.log("Criando a Mensagem:", qualÉAResposta);
+        });
+
+      // setListaMensagem([mensagem, ...listaMensagem]);
       setMensagem("");
     }
   };
