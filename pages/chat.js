@@ -3,6 +3,7 @@ import appConfig from "../config.json";
 import { Box, TextField, Button } from "@skynexui/components";
 import Header from "../components/Header";
 import MessageList from "../components/MessageList";
+import Loading from "../components/Loading";
 import { createClient } from "@supabase/supabase-js";
 
 const SUPABASE_ANON_KEY =
@@ -12,18 +13,11 @@ const SUPABASE_URL = "https://pcifwqiflysgretcymhn.supabase.co";
 
 const supabaseClient = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
-// supabaseClient
-//   .from("mensagens")
-//   .select("*")
-//   .then((dados) => {
-//     console.log(dados.data);
-//   });
-
 export default function ChatPage({ usuario }) {
-  console.log(usuario);
   // Sua lógica vai aqui
   const [mensagem, setMensagem] = React.useState("");
   const [listaMensagem, setListaMensagem] = React.useState([]);
+  const [loading, setLoading] = React.useState(false);
 
   const filtraLista = (id) => {
     setListaMensagem([
@@ -31,6 +25,16 @@ export default function ChatPage({ usuario }) {
         return i.id !== id;
       }),
     ]);
+    supabaseClient
+      .from("mensagens")
+      .delete()
+      .match({ id: id })
+      .then((res) => {
+        console.log(res);
+      });
+  };
+  const logout = () => {
+    setLoading(false);
   };
 
   React.useEffect(() => {
@@ -38,9 +42,9 @@ export default function ChatPage({ usuario }) {
       .from("mensagens")
       .select("*")
       .then(({ data }) => {
-        // console.log("Dados: ", data);
         setListaMensagem(data.reverse());
       });
+    setLoading(true);
   }, []);
 
   const handleNovaMensagem = (novaMensagem) => {
@@ -55,12 +59,10 @@ export default function ChatPage({ usuario }) {
       supabaseClient
         .from("mensagens")
         .insert([mensagem])
-        .then((qualÉAResposta) => {
-          // console.log("Criando a Mensagem:", qualÉAResposta);
+        .then(({ data }) => {
+          setListaMensagem([data[0], ...listaMensagem]);
+          setMensagem("");
         });
-
-      // setListaMensagem([mensagem, ...listaMensagem]);
-      setMensagem("");
     }
   };
 
@@ -93,7 +95,7 @@ export default function ChatPage({ usuario }) {
           padding: "32px",
         }}
       >
-        <Header />
+        <Header logout={logout} />
         <Box
           styleSheet={{
             position: "relative",
@@ -106,8 +108,21 @@ export default function ChatPage({ usuario }) {
             padding: "16px",
           }}
         >
-          {/* {listaMensagem.map((mensagem) => {  })} */}
-          <MessageList mensagens={listaMensagem} deletaMsg={filtraLista} />
+          {!loading ? (
+            <Box
+              styleSheet={{
+                height: "90%",
+                width: "100%",
+                display: "flex",
+                justifyContent: "center",
+                alignItems: "center",
+              }}
+            >
+              <Loading />
+            </Box>
+          ) : (
+            <MessageList mensagens={listaMensagem} deletaMsg={filtraLista} />
+          )}
           <Box
             as="form"
             styleSheet={{

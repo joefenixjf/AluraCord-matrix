@@ -3,7 +3,6 @@ import React from "react";
 
 export default function ({ Component, pageProps }) {
   const [usuario, setUsuario] = React.useState("");
-
   const obtemUsuario = (user) => {
     setUsuario(user);
   };

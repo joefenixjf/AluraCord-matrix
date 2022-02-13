@@ -1,5 +1,6 @@
 import { Box, Text, Image, Button } from "@skynexui/components";
 import appConfig from "../config.json";
+import React from "react";
 
 export default function MessageList({ mensagens, deletaMsg }) {
   return (

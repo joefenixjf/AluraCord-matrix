@@ -1,6 +1,6 @@
 import { Box, Text, Button } from "@skynexui/components";
 
-export default function Header() {
+export default function Header(props) {
   return (
     <>
       <Box
@@ -14,6 +14,9 @@ export default function Header() {
       >
         <Text variant="heading5">Chat</Text>
         <Button
+          onClick={() => {
+            props.logout;
+          }}
           variant="tertiary"
           colorVariant="neutral"
           label="Logout"
