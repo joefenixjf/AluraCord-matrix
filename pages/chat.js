@@ -5,6 +5,7 @@ import Header from "../components/Header";
 import MessageList from "../components/MessageList";
 import Loading from "../components/Loading";
 import { createClient } from "@supabase/supabase-js";
+import { ButtonSendSticker } from "../components/SendSticker";
 
 const SUPABASE_ANON_KEY =
   "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJyb2xlIjoiYW5vbiIsImlhdCI6MTY0MzkyNDk0MSwiZXhwIjoxOTU5NTAwOTQxfQ.lzFrVg0g1XtSjK2iKwL3DFHLbKy6rvbgd6KQ5X_29BM";
@@ -37,14 +38,31 @@ export default function ChatPage({ usuario }) {
     setLoading(false);
   };
 
-  React.useEffect(() => {
+  const downloadSupabase = () => {
+    // buscando mensagem do DB e atualizando a lista
     supabaseClient
       .from("mensagens")
       .select("*")
+      .order("id", { ascending: false })
       .then(({ data }) => {
-        setListaMensagem(data.reverse());
+        setListaMensagem(data);
       });
+  };
+
+  const mensagemRealTime = (atualizaMsg) => {
+    supabaseClient
+      .from("mensagens")
+      .on("INSERT", (data) => {
+        console.log("retorno", data);
+        atualizaMsg();
+      })
+      .subscribe();
+  };
+
+  React.useEffect(() => {
+    downloadSupabase();
     setLoading(true);
+    mensagemRealTime(downloadSupabase);
   }, []);
 
   const handleNovaMensagem = (novaMensagem) => {
@@ -60,10 +78,10 @@ export default function ChatPage({ usuario }) {
         .from("mensagens")
         .insert([mensagem])
         .then(({ data }) => {
-          setListaMensagem([data[0], ...listaMensagem]);
-          setMensagem("");
+          console.log("envio", data);
         });
     }
+    setMensagem("");
   };
 
   // ./Sua lógica vai aqui
@@ -152,6 +170,12 @@ export default function ChatPage({ usuario }) {
                 backgroundColor: appConfig.theme.colors.neutrals[800],
                 marginRight: "12px",
                 color: appConfig.theme.colors.neutrals[200],
+              }}
+            />
+            <ButtonSendSticker
+              onStickerClick={(sticker) => {
+                console.log("[Usando o componente] salva o sticker no banco");
+                handleNovaMensagem(`:sticker:${sticker}`);
               }}
             />
             <Button

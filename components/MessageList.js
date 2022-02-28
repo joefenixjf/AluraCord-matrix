@@ -74,7 +74,16 @@ export default function MessageList({ mensagens, deletaMsg }) {
                 }}
               />
             </Box>
-            {mensagem.texto}
+            {mensagem.texto.startsWith(":sticker:") ? (
+              <Image
+                styleSheet={{
+                  maxWidth: "150px",
+                }}
+                src={mensagem.texto.replace(":sticker:", "")}
+              />
+            ) : (
+              mensagem.texto
+            )}
           </Text>
         );
       })}
